@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>AI NLP News Categorizer</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- SIDEBAR -->
+
+    <div class="sidebar">
+
+        <div class="logo">
+
+            AI NLP
+
+        </div>
+
+        <h1>
+
+            News Topic Classification System
+
+        </h1>
+
+        <p>
+
+            Advanced NLP + Machine Learning
+            web application for intelligent
+            news categorization.
+
+        </p>
+
+        <div class="sidebar-cards">
+
+            <div class="card">
+
+                <h3>Model Accuracy</h3>
+
+                <h2>90.87%</h2>
+
+            </div>
+
+            <div class="card">
+
+                <h3>Dataset</h3>
+
+                <h2>AG News</h2>
+
+            </div>
+
+        </div>
+
+        <!-- NLP PIPELINE -->
+
+        <div class="pipeline">
+
+            <h3>NLP Pipeline</h3>
+
+            <ul>
+                <li>Input Text</li>
+                <li>↓</li>
+                <li>Preprocessing</li>
+                <li>↓</li>
+                <li>TF-IDF</li>
+                <li>↓</li>
+                <li>Logistic Regression</li>
+                <li>↓</li>
+                <li>Prediction</li>
+            </ul>
+
+        </div>
+
+    </div>
+
+    <!-- MAIN CONTENT -->
+
+    <div class="main-content">
+
+        <h2>
+
+            Analyze News Article
+
+        </h2>
+
+        <form method="POST">
+
+            <textarea
+                id="news_text"
+                name="news_text"
+
+                placeholder="Paste news article or headline here..."
+
+                required
+
+                onkeyup="updateCounts()"
+
+            >{{ user_text }}</textarea>
+
+            <!-- COUNTS -->
+
+            <div class="counts">
+
+                <span>Characters: <b id="charCount">0</b></span>
+
+                <span>Words: <b id="wordCount">0</b></span>
+
+            </div>
+
+            <button type="submit">
+
+                Predict Category
+
+            </button>
+
+        </form>
+
+        <!-- RESULT -->
+
+        {% if prediction %}
+
+        <div class="result-box">
+
+            <h3>Prediction Result</h3>
+
+            <div class="prediction-tag"
+                 style="background: {{ result_color }};">
+
+                {{ prediction }}
+
+            </div>
+
+            <!-- CONFIDENCE -->
+
+            <div class="confidence-section">
+
+                <p>
+
+                    Confidence Score:
+                    {{ confidence }}%
+
+                </p>
+
+                <div class="progress-bar">
+
+                    <div class="progress-fill"
+                         style="width: {{ confidence }}%;">
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- PROBABILITIES -->
+
+            <div class="probabilities">
+
+                {% for category, value in probabilities.items() %}
+
+                <div class="prob-item">
+
+                    <span>{{ category }}</span>
+
+                    <span>{{ value }}%</span>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+            <!-- NLP STATS -->
+
+            <div class="stats-grid">
+
+                <div class="mini-stat">
+                    <h4>{{ word_count }}</h4>
+                    <p>Words</p>
+                </div>
+
+                <div class="mini-stat">
+                    <h4>{{ char_count }}</h4>
+                    <p>Characters</p>
+                </div>
+
+                <div class="mini-stat">
+                    <h4>{{ token_count }}</h4>
+                    <p>Tokens</p>
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+        <!-- HISTORY -->
+
+        <div class="history-section">
+
+            <h3>Recent Predictions</h3>
+
+            {% for item in history %}
+
+            <div class="history-card">
+
+                <p>{{ item.text }}</p>
+
+                <span>{{ item.prediction }}</span>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+function updateCounts(){
+
+    let text =
+    document.getElementById("news_text").value;
+
+    document.getElementById("charCount").innerText =
+    text.length;
+
+    document.getElementById("wordCount").innerText =
+    text.trim().split(/\s+/).filter(Boolean).length;
+}
+
+updateCounts();
+
+</script>
+
+</body>
+</html>
